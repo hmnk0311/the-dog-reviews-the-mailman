@@ -66,6 +66,12 @@ from pathlib import Path
 
 
 def main() -> None:
+    # Gate guard: the entry must be exactly one line of at most
+    # 200 characters (the trailing newline is the file's, not
+    # the line's). Fail loudly rather than write an invalid entry.
+    line = TEXT.rstrip("\n")
+    assert "\n" not in line, "entry must be a single line"
+    assert 1 <= len(line) <= 200, "entry must be 1-200 characters"
     os.umask(0o022)
     out_dir = Path(os.environ.get("MAKEFUN_OUTPUT_DIR", "/output"))
     out_dir.mkdir(parents=True, exist_ok=True)
